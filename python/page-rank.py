@@ -11,8 +11,11 @@ def pagerank(matrix, num_iterations, damping_factor):
 
 	return rank_vector
 
+def main():
+	matrix = np.array([[0,0,0,0,1],[0.5,0,0,0,0],[0,1,0.5,0,0],[0,0,0.5,1,0],[0.5,0,0,0,0]])
+	v = pagerank(matrix, 100, 0.85)
+	print("Page rank vector\n", v)
 
-matrix = np.array([[0,0,0,0,1],[0.5,0,0,0,0],[0,1,0.5,0,0],[0,0,0.5,1,0],[0.5,0,0,0,0]])
 
-v = pagerank(matrix, 100, 0.85)
-print(v)
+if __name__ == '__main__':
+	main()

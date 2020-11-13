@@ -1,97 +1,26 @@
 #include <bits/stdc++.h>
+#include "Matrix.h"
+#include "RankVector.h"
 
 using namespace std;
 
-void printVector(vector<float> v) {
-	unsigned i = 0;
-	for (; i < v.size()-1; ++i) {
-		cout << v[i] << ", ";
+vector<float> pagerank(Matrix matrix, int dimension, int iterations, float dampingFactor) {
+	RankVector v = RankVector(dimension);
+	v.normalize();
+	vector<float> rankVector = v.getVector();
+
+	matrix.multiplyScalar(dampingFactor);
+	matrix.addScalar((1 - dampingFactor)/dimension);
+
+	for (unsigned i = 0; i < iterations; ++i) {
+		rankVector = matrix.multiplyVector(rankVector);
 	}
-	cout << v[i] << endl;
+
+	return rankVector;
 }
 
-class Matrix {
-private:
-	vector<vector<float>> matrix;
-	int dimension;
-public:
-	Matrix(int n) {
-		dimension = n;
-	};
 
-	void appendRow(vector<float> row) {
-		matrix.push_back(row);
-	}
-
-	float getCell(int rowId, int colId) {
-		if (rowId >= dimension || colId >= dimension) 
-			return -1.0;
-		return matrix[rowId][colId];
-	}
-
-	void multiplyScalar(float scalar) {
-		for (unsigned i = 0; i < dimension; ++i) {
-			for (unsigned j = 0; j < dimension; ++j) {
-				matrix[i][j] *= scalar;
-			}
-		}
-	}
-
-	void addScalar(float scalar) {
-		for (unsigned i = 0; i < dimension; ++i) {
-			for (unsigned j = 0; j < dimension; ++j) {
-				matrix[i][j] += scalar;
-			}
-		}
-	}
-
-	vector<float> multiplyVector(vector<float> v) {
-		vector<float> multipliedVector;
-		for (unsigned i = 0; i < dimension; ++i) {
-			float rank = 0.0;
-			for (unsigned j = 0; j < dimension; ++j) {
-				rank += matrix[i][j]*v[j];
-			}
-			multipliedVector.push_back(rank);
-		}
-		return multipliedVector;
-	}
-
-	void print() {
-		for (unsigned i = 0; i < dimension; ++i) {
-			printVector(matrix[i]);
-			cout << endl;
-		}
-	}
-
-};
-
-vector<float> randomVector(int dimension) {
-	vector<float> random;
-	float r = 0.0;
-	for (unsigned i = 0; i < dimension; ++i) {
-		r = (rand()/(float)RAND_MAX);
-		random.push_back(r);
-	}
-	return random;
-}
-
-void normalizeVector(vector<float> &v, int n) {
-	float normalizer = 0.0;
-	for (unsigned i = 0; i < n; ++i)
-		normalizer += v[i];
-	for (unsigned i = 0; i < n; ++i) {
-		v[i] = v[i]/normalizer;
-	}
-}
-
-vector<float> randomNormalVector(int dimension) {
-	vector<float> random = randomVector(dimension);
-	normalizeVector(random, dimension);
-	return random; 
-}
-
-Matrix testMatrix() {
+Matrix exampleMatrix() {
 	Matrix matrix = Matrix(5);
 
 	vector<float> v0{0.0,0.0,0.0,0.0,1.0};
@@ -109,18 +38,6 @@ Matrix testMatrix() {
 	return matrix;
 }
 
-vector<float> pagerank(Matrix matrix, int dimension, int iterations, float dampingFactor) {
-	vector<float> rankVector = randomNormalVector(dimension);
-
-	matrix.multiplyScalar(dampingFactor);
-	matrix.addScalar((1 - dampingFactor)/dimension);
-
-	for (unsigned i = 0; i < iterations; ++i) {
-		rankVector = matrix.multiplyVector(rankVector);
-	}
-
-	return rankVector;
-}
 
 int main() {
 	srand(time(0));
@@ -128,11 +45,11 @@ int main() {
 	int n = 5;
 	int iterations = 100;
 	float dampingFactor = 0.85;
-	Matrix matrix = testMatrix();
+	Matrix matrix = exampleMatrix();
 
 	vector<float> v = pagerank(matrix, n, iterations, dampingFactor);
 	cout << "Page rank vector:" << endl;
-	printVector(v);
-
+	for (unsigned i = 0; i < n; ++i) 
+		cout << v[i] << endl;
 	return 0;
 }

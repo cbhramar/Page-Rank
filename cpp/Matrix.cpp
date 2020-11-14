@@ -3,12 +3,24 @@
 
 using namespace std;
 
+Matrix::Matrix() {
+	dimension = -1;
+}
+
 Matrix::Matrix(int n) {
 	dimension = n;
 }
 
 void Matrix::appendRow(vector<float> row) {
 	matrix.push_back(row);
+}
+
+int Matrix::getDimension() {
+	return dimension;
+}
+
+vector<float> Matrix::getRow(unsigned rowId) {
+	return matrix[rowId];
 }
 
 float Matrix::getCell(int rowId, int colId) {
@@ -46,11 +58,13 @@ vector<float> Matrix::multiplyVector(vector<float> v) {
 }
 
 void Matrix::print() {
+	cout << right << setw(dimension*4) << "--Matrix--" << endl;
 	for (unsigned i = 0; i < dimension; ++i) {
 		unsigned j = 0;
 		for (j; j < dimension-1; ++j) {
-			cout << matrix[i][j] << ", ";
+			cout << right << setw(4) << matrix[i][j] << "| ";
 		}
-		cout << matrix[i][j] << endl;
+		cout << right << setw(4) << matrix[i][j] << "| " << endl;
 	}
+	cout << right << setw(dimension*4) << "----------" << endl;
 }

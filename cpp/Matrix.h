@@ -9,9 +9,13 @@ private:
 	int dimension;
 
 public:
+	Matrix();
 	Matrix(int n);
 
 	float getCell(int rowId, int colId);
+	vector<float> getRow(unsigned rowId);
+	int getDimension();
+
 	void appendRow(vector<float> row);
 
 	void multiplyScalar(float scalar);

@@ -4,20 +4,37 @@
 
 using namespace std;
 
-vector<float> pagerank(Matrix matrix, int dimension, int iterations, float dampingFactor) {
-	RankVector v = RankVector(dimension);
-	v.normalize();
-	vector<float> rankVector = v.getVector();
-
-	matrix.multiplyScalar(dampingFactor);
-	matrix.addScalar((1 - dampingFactor)/dimension);
-
-	for (unsigned i = 0; i < iterations; ++i) {
-		rankVector = matrix.multiplyVector(rankVector);
+class PageRank {
+private:
+	vector<float> pageRankVector;
+	int iterations;
+	float dampingFactor;
+	int dimension;
+public:
+	PageRank(int dimension, int iterations, float dampingFactor) {
+		this->dimension = dimension;
+		this->iterations = iterations;
+		this->dampingFactor = dampingFactor;
+		RankVector v = RankVector(dimension);
+		v.normalize();
+		pageRankVector = v.getVector();
 	}
 
-	return rankVector;
-}
+	void pagerank(Matrix matrix) {
+		matrix.multiplyScalar(dampingFactor);
+		matrix.addScalar((1 - dampingFactor)/dimension);
+
+		for (unsigned i = 0; i < iterations; ++i)
+			pageRankVector = matrix.multiplyVector(pageRankVector);
+	}
+
+	void print() {
+		cout << "Page Rank Vector: " << endl;
+		for (unsigned i = 0; i < dimension; ++i)
+			cout << right << setw(12) << pageRankVector[i] << endl;
+	}
+	
+};
 
 
 Matrix exampleMatrix() {
@@ -38,18 +55,18 @@ Matrix exampleMatrix() {
 	return matrix;
 }
 
-
 int main() {
 	srand(time(0));
 
-	int n = 5;
+	int dimension = 5;
 	int iterations = 100;
 	float dampingFactor = 0.85;
 	Matrix matrix = exampleMatrix();
+	matrix.print();
 
-	vector<float> v = pagerank(matrix, n, iterations, dampingFactor);
-	cout << "Page rank vector:" << endl;
-	for (unsigned i = 0; i < n; ++i) 
-		cout << v[i] << endl;
+	PageRank pageRank = PageRank(dimension, iterations, dampingFactor);
+	pageRank.pagerank(matrix);
+	pageRank.print();
+
 	return 0;
 }

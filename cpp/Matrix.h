@@ -12,11 +12,12 @@ public:
 	Matrix();
 	Matrix(int n);
 
+	void appendRow(vector<float> row);
+	void operator=(const Matrix& m);
+
 	float getCell(int rowId, int colId);
 	vector<float> getRow(unsigned rowId);
 	int getDimension();
-
-	void appendRow(vector<float> row);
 
 	void multiplyScalar(float scalar);
 	void addScalar(float scalar);

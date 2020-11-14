@@ -3,6 +3,8 @@
 
 using namespace std;
 
+const unsigned PRINT_WIDTH = 6;
+
 Matrix::Matrix() {
 	dimension = -1;
 }
@@ -13,6 +15,13 @@ Matrix::Matrix(int n) {
 
 void Matrix::appendRow(vector<float> row) {
 	matrix.push_back(row);
+}
+
+void Matrix::operator=(const Matrix& m) {
+	this->dimension = m.dimension;
+	for (unsigned i = 0; i < dimension; ++i) {
+		this->matrix.push_back(m.matrix[i]);
+	}
 }
 
 int Matrix::getDimension() {
@@ -58,13 +67,11 @@ vector<float> Matrix::multiplyVector(vector<float> v) {
 }
 
 void Matrix::print() {
-	cout << right << setw(dimension*4) << "--Matrix--" << endl;
 	for (unsigned i = 0; i < dimension; ++i) {
 		unsigned j = 0;
 		for (j; j < dimension-1; ++j) {
-			cout << right << setw(4) << matrix[i][j] << "| ";
+			cout << right << setw(PRINT_WIDTH) << matrix[i][j] << "| ";
 		}
-		cout << right << setw(4) << matrix[i][j] << "| " << endl;
+		cout << right << setw(PRINT_WIDTH) << matrix[i][j] << "| " << endl;
 	}
-	cout << right << setw(dimension*4) << "----------" << endl;
 }
